@@ -1,0 +1,579 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Kanban Zone Public API (beta)",
+    "description": "# Getting Started\nTo use the Kanban Zone Public API to send an HTTPS request, you'll need to generate your Organization Access ID and API Key from within Kanban Zone Organization Settings -> API Key. (paid plan required)\n\nPlease refer to our knowledge base api documentation for more information. https://kanbanzone.com/knowledge-base/\n\nOnce keys have been generated, they can be copied to construct your encoded authorization token.\n\n# Before you begin\nTo send a request using basic authorization, you'll need to generate Access ID and API Key in Settings -> Organization Settings -> API Key Once keys have been generated, they can be copied to construct your request header.\n\nAll activities that occur using your API Access ID and Key are your responsibility. Keep your API Access ID and Key secret. Do not sell, share, transfer, or sublicense them to any other party other than your employees or independent contractors.\n\n# Construct and Encode your API Keys for Authorization\nConstruct and send the authorization keys with every HTTPS request. Build a single string using the values you generated and copied from Kanban Zone API Settings in this format:\n\n*{accessid}:{apikey}*\n\nEncode the string using Base64. Provide your encoded authorization keys in your request. See below for options.\n\n# Provide Keys as:\n**Authorization Header**\nSupply an authorization header as part of your request with the format:\n\n*Authorization: Basic {encoded-string}*\n\n*Make sure to replace {encoded-string} with your encoded string from Step Construct and Encode your API Keys for Authorization above.\n\n**Query String Parameter**\nSupply the authorization as a query parameter from Step 2 within the url of your request with the format:\n\n*?apitoken={encoded-string}*\n\n*Make sure to replace {encoded-string} with your encoded string from Step Construct and Encode your API Keys for Authorization above.",
+    "contact": {
+      "email": "support@kanbanzone.com",
+      "name": "Kanban Zone Public API Support",
+      "url": "https://kanbanzone.com/contact/"
+    },
+    "termsOfService": "https://kanbanzone.com/terms-of-service/"
+  },
+  "host": "integrations.kanbanzone.io",
+  "basePath": "/v1",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/card": {
+      "get": {
+        "summary": "Gets a specific card from a board within your organization by the card number.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "board",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "The board public id"
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "required": true,
+            "description": "The card number",
+            "type": "string"
+          },
+          {
+            "name": "api_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "name": "includeArchivedCards",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "True to include, False to exclude (default)"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/CardsOutputModel"
+            }
+          }
+        },
+        "tags": [
+          "Cards"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "in": "body",
+            "name": "card",
+            "required": true,
+            "description": "The card to add to a board within your organization.",
+            "schema": {
+              "$ref": "#/definitions/CardInputModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/CardsOutputModel"
+            }
+          }
+        },
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Adds a single card to a specific board within your organization."
+      }
+    },
+    "/cards": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "board",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "The board public id"
+          },
+          {
+            "name": "api_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "name": "includeArchivedCards",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "True to include, False to exclude (default)"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/CardsOutputModel"
+            }
+          }
+        },
+        "summary": "Get cards from a board within your organization.",
+        "tags": [
+          "Cards"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api_token",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "encoded api token"
+          },
+          {
+            "in": "body",
+            "name": "cards",
+            "required": true,
+            "description": "List of cards to add to a board within your organization.",
+            "schema": {
+              "$ref": "#/definitions/CardsInputModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/CardsOutputModel"
+            }
+          }
+        },
+        "tags": [
+          "Cards"
+        ],
+        "summary": "Adds multiple cards to a specific board within your organization."
+      }
+    }
+  },
+  "definitions": {
+    "CardInputModel": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CardItemInputModel"
+        },
+        {
+          "type": "object"
+        }
+      ],
+      "properties": {
+        "board": {
+          "type": "string",
+          "title": "The Board public Id",
+          "pattern": "^(.*)$",
+          "example": "Hds5Zuks"
+        },
+        "addToTop": {
+          "type": "boolean",
+          "title": "true-Add the card to the top of the column specified, false-Add to the bottom of the column specified",
+          "default": true
+        }
+      },
+      "title": "CardInputModel"
+    },
+    "CardsInputModel": {
+      "type": "object",
+      "required": [
+        "board",
+        "cards"
+      ],
+      "properties": {
+        "board": {
+          "type": "string",
+          "title": "The Board public Id",
+          "pattern": "^(.*)$",
+          "example": "Hds5Zuks"
+        },
+        "addToTop": {
+          "type": "boolean",
+          "title": "true-Add cards to the top of the column specified, false-Add cards to the bottom of the column specified",
+          "default": true
+        },
+        "cards": {
+          "type": "array",
+          "title": "Cards",
+          "items": {
+            "type": "object",
+            "title": "Cards Items",
+            "allOf": [
+              {
+                "$ref": "#/definitions/CardItemInputModel"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        }
+      },
+      "title": "CardsInputModel"
+    },
+    "CardItemInputModel": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "The Card Title",
+          "pattern": "^(.*)$",
+          "example": "Example - card title"
+        },
+        "description": {
+          "type": "string",
+          "title": "The Card Description",
+          "pattern": "^(.*)$",
+          "example": "Example plain text description OR <p>HTML formatted text</p><p>Second row</p>"
+        },
+        "blocked": {
+          "type": "boolean",
+          "title": "The Card Blocked State",
+          "default": false
+        },
+        "blockedBy": {
+          "type": "string",
+          "title": "The Card Blockedby Kanban Zone member email",
+          "pattern": "^(.*)$",
+          "example": "member1@org.com"
+        },
+        "blockedReason": {
+          "type": "string",
+          "title": "The Card Blocked Reason",
+          "pattern": "^(.*)$",
+          "example": "Example blocked by reason"
+        },
+        "dueAt": {
+          "type": "string",
+          "title": "The Card Due Date",
+          "pattern": "^(.*)$",
+          "example": "06/14/2019 or 2019-06-14T00:00:00.000Z"
+        },
+        "owner": {
+          "type": "string",
+          "title": "The Card Owner Kanban Zone email",
+          "pattern": "^(.*)$",
+          "example": "member1@org.com"
+        },
+        "priority": {
+          "type": "string",
+          "title": "The Card Priority",
+          "pattern": "^(.*)$",
+          "example": "1, 2, 3 or 4"
+        },
+        "label": {
+          "type": "string",
+          "title": "The Card Kanban Zone Label Name",
+          "pattern": "^(.*)$",
+          "example": "Enhancement"
+        },
+        "size": {
+          "type": "string",
+          "title": "The Card Size",
+          "pattern": "^(.*)$",
+          "example": "S, M, L or XL"
+        },
+        "watchers": {
+          "type": "array",
+          "title": "The List of Card Watchers Kanban Zone emails",
+          "example": [
+            "member1@org.com",
+            "member2@org.com"
+          ],
+          "items": {
+            "type": "string",
+            "title": "The Watchers Items Schema",
+            "pattern": "^(.*)$"
+          }
+        },
+        "customFields": {
+          "type": "object",
+          "title": "The list of custom fields defined for the card",
+          "properties": {
+            "label": {
+              "type": "string",
+              "title": "Custom field label",
+              "example": "Project Code",
+              "pattern": "^(.*)$"
+            },
+            "value": {
+              "type": "string",
+              "title": "Custom field value",
+              "example": "123-PC-00X",
+              "pattern": "^(.*)$"
+            }
+          }
+        }
+      },
+      "title": "CardItemInputModel"
+    },
+    "CardsOutputModel": {
+      "type": "object",
+      "title": "CardsOutputModel",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "title": "The Number of Cards.",
+          "pattern": "^(.*)$",
+          "example": 1
+        },
+        "cards": {
+          "type": "array",
+          "title": "Cards",
+          "items": {
+            "type": "object",
+            "title": "Cards Items",
+            "allOf": [
+              {
+                "$ref": "#/definitions/CardItemOutputModel"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "errors": {
+          "type": "object",
+          "title": "The Errors Schema",
+          "required": [
+            "error",
+            "errors"
+          ],
+          "properties": {
+            "error": {
+              "type": "boolean",
+              "title": "The Error Schema",
+              "default": false
+            },
+            "errors": {
+              "type": "array",
+              "title": "The Errors Schema",
+              "items": {
+                "type": "string",
+                "title": "The Error Items Schema",
+                "pattern": "^(.*)$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "CardItemOutputModel": {
+      "type": "object",
+      "properties": {
+        "CardItem": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "integer",
+              "title": "The Card Number",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "title": "The Card Title",
+              "pattern": "^(.*)$",
+              "example": "Example - card title"
+            },
+            "description": {
+              "type": "string",
+              "title": "The Card Description",
+              "pattern": "^(.*)$",
+              "example": "Example plain text description OR <p>HTML formatted text</p><p>Second row</p>"
+            },
+            "blocked": {
+              "type": "boolean",
+              "title": "The Card Blocked State",
+              "default": false
+            },
+            "blockedBy": {
+              "type": "string",
+              "title": "The Card Blockedby Kanban Zone member email",
+              "pattern": "^(.*)$",
+              "example": "member1@org.com"
+            },
+            "blockedReason": {
+              "type": "string",
+              "title": "The Card Blocked Reason",
+              "pattern": "^(.*)$",
+              "example": "Example blocked by reason"
+            },
+            "dueAt": {
+              "type": "string",
+              "title": "The Card Due Date",
+              "pattern": "^(.*)$",
+              "example": "06/14/2019 or 2019-06-14T00:00:00.000Z"
+            },
+            "owner": {
+              "type": "string",
+              "title": "The Card Owner Kanban Zone email",
+              "pattern": "^(.*)$",
+              "example": "member1@org.com"
+            },
+            "priority": {
+              "type": "string",
+              "title": "The Card Priority",
+              "pattern": "^(.*)$",
+              "example": "1, 2, 3 or 4"
+            },
+            "label": {
+              "type": "string",
+              "title": "The Card Kanban Zone Label Name",
+              "pattern": "^(.*)$",
+              "example": "Enhancement"
+            },
+            "size": {
+              "type": "string",
+              "title": "The Card Size",
+              "pattern": "^(.*)$",
+              "example": "S, M, L or XL"
+            },
+            "watchers": {
+              "type": "array",
+              "title": "The List of Card Watchers Kanban Zone emails",
+              "example": [
+                "member1@org.com",
+                "member2@org.com"
+              ],
+              "items": {
+                "type": "string",
+                "title": "The Watchers Items Schema",
+                "pattern": "^(.*)$"
+              }
+            },
+            "noneAt": {
+              "type": "string",
+              "title": "When the card entered a None column state",
+              "example": "2020-01-29T16:54:02.884Z"
+            },
+            "archivedAt": {
+              "type": "string",
+              "title": "When the card became archived",
+              "example": "2020-01-29T16:54:02.884Z"
+            },
+            "doneAt": {
+              "type": "string",
+              "title": "When the card entered its first Done column state",
+              "example": "2020-01-29T16:54:02.884Z"
+            },
+            "createdAt": {
+              "type": "string",
+              "title": "When the card was first created",
+              "example": "2020-01-29T16:54:02.884Z"
+            },
+            "customFields": {
+              "type": "object",
+              "title": "The list of custom fields defined for the card",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "title": "Custom field label",
+                  "example": "Project Code",
+                  "pattern": "^(.*)$"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Custom field value",
+                  "example": "123-PC-00X",
+                  "pattern": "^(.*)$"
+                }
+              }
+            }
+          },
+          "required": [
+            "title"
+          ]
+        }
+      },
+      "title": "CardItemOutputModel"
+    }
+  },
+  "externalDocs": {
+    "url": "https://kanbanzone.com/knowledge-base/",
+    "description": "Kanban Zone Knowledge Base"
+  },
+  "tags": [
+    {
+      "name": "Cards",
+      "description": "Cards that show on your Kanban boards. Integrate with Kanban Zone by adding cards to your boards or requesting card information from your boards within your organization.",
+      "externalDocs": {
+        "url": "https://kanbanzone.com/product/"
+      }
+    }
+  ]
+}
